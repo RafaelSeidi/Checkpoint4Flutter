@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:movie_app/common/utils.dart';
+import 'package:movie_app/models/movie_credits_model.dart';
 import 'package:movie_app/models/movie_detail_model.dart';
 import 'package:movie_app/models/movie_model.dart';
 
@@ -51,6 +52,17 @@ class ApiServices {
       return MovieDetailModel.fromJson(jsonDecode(response.body));
     }
     throw Exception('failed to load  movie details');
+  }
+
+  Future<MovieCreditsModel> getMovieCredits(int movieId) async {
+    final endPoint = 'movie/$movieId/credits';
+    final url = '$baseUrl$endPoint$key';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return MovieCreditsModel.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('failed to load movie credits');
   }
 
   Future<Result> getMovieRecommendations(int movieId) async {

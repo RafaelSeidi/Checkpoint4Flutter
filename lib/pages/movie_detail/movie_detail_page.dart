@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/common/utils.dart';
+import 'package:movie_app/models/movie_credits_model.dart';
 import 'package:movie_app/models/movie_detail_model.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/services/api_services.dart';
@@ -18,6 +19,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   late Future<MovieDetailModel> movieDetail;
   late Future<Result> movieRecommendationModel;
+  late Future<MovieCreditsModel> movieCredits;
 
   @override
   void initState() {
@@ -29,6 +31,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     movieDetail = apiServices.getMovieDetail(widget.movieId);
     movieRecommendationModel =
         apiServices.getMovieRecommendations(widget.movieId);
+    movieCredits = apiServices.getMovieCredits(widget.movieId);
     setState(() {});
   }
 
@@ -122,9 +125,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             const SizedBox(
                               width: 5,
                             ),
-                        Text(
-                          '${movie.voteAverage.toStringAsFixed(1)}',
-                        ),
+                            Text(
+                              '${movie.voteAverage.toStringAsFixed(1)}',
+                            ),
                           ],
                         ),
                         const SizedBox(
@@ -136,6 +139,42 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                               color: Colors.white, fontSize: 16),
+                        ),
+                        const SizedBox(
+                          height: 13,
+                        ),
+                        Text(
+                          "Atores:",
+                          style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 245, 255, 65),
+                                      ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        FutureBuilder(
+                          future: movieCredits,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final credits = snapshot.data;
+
+                              String creditsText = credits!.cast
+                                  .map((cast) => cast.name)
+                                  .join(', ');
+
+                              return Container(
+                                width: MediaQuery.of(context).size.width*1,
+                                child: 
+                                Text(
+                                  creditsText,
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                              ),
+                              );
+                            }
+                            return const SizedBox();
+                          },
                         ),
                       ],
                     ),
@@ -155,8 +194,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 11.0), 
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 11.0),
                                     child: Text(
                                       "As pessoas também assistem:",
                                       maxLines: 9,
