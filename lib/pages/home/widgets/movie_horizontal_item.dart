@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/common/utils.dart';
 import 'package:movie_app/models/movie_model.dart';
+import 'package:movie_app/pages/movie_detail/movie_detail_page.dart';
 
 class MovieHorizontalItem extends StatelessWidget {
   const MovieHorizontalItem({
@@ -12,7 +13,15 @@ class MovieHorizontalItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MovieDetailPage(
+                  movieId: movie.id,
+                )));
+      },
+      child: 
+      Stack(
       children: [
         Container(
           height: 240,
@@ -98,6 +107,7 @@ class MovieHorizontalItem extends StatelessWidget {
           ),
         )
       ],
+    ),
     );
   }
 }

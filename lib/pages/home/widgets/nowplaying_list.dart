@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/movie_model.dart';
+import 'package:movie_app/pages/movie_detail/movie_detail_page.dart';
 import 'package:movie_app/widgets/custom_card_thumbnail.dart';
 
 class NowPlayingList extends StatefulWidget {
@@ -13,7 +14,7 @@ class NowPlayingList extends StatefulWidget {
 class _NowPlayingListState extends State<NowPlayingList> {
   final PageController _pageController = PageController(viewportFraction: 0.9);
 
-  int currentPage = 1;
+  int currentPage = 0;
   final maxItems = 5;
 
   @override
@@ -30,9 +31,18 @@ class _NowPlayingListState extends State<NowPlayingList> {
             itemCount: totalItems > maxItems ? maxItems : totalItems,
             itemBuilder: (context, index) {
               final imgUrl = widget.result.movies[index].posterPath;
-              return CustomCardThumbnail(
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MovieDetailPage(
+                            movieId: widget.result.movies[index].id,
+                          )));
+                },
+                child: CustomCardThumbnail(
                 imageAsset: imgUrl,
+              ),
               );
+              
             },
             onPageChanged: (int page) {
               setState(() {
